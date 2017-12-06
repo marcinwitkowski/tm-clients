@@ -15,7 +15,7 @@ Project includes Python clients to services used in TM labs .
  1. Move to the directory with the used interpreter python.exe.
  2. Run:
  ```bash
- python.exe -m pip install -r requirements.txt
+ python.exe -m pip install -r path_to_requirements.txt
  ```
  
  Contact: witkow@agh.edu.pl
