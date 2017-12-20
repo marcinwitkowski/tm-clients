@@ -1,0 +1,9 @@
+#ABNF 1.0;
+language pl-pl;
+mode voice;
+root $root;
+tag-format <semantics/1.0-literals>;
+
+$root = ($word) <1-10>;
+
+$word = (jeden | raz) | dwa | trzy | cztery | pięć | sześć | siedem | osiem | dziewięć | zero;
