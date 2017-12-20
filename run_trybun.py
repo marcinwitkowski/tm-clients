@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
-#coding=utf-8
+# coding=utf-8
 
-from tts import TTS_pb2
+from techmo_trybun_pyclient import TTS_pb2
+from techmo_trybun_pyclient.wave_saver import WaveSaver
+from address_provider import AddressProvider
 import grpc
-from tts.wave_saver import WaveSaver
 
 if __name__ == '__main__':
     # Config:
-    wave_file = 'tts_output.wav'
-    address = "149.156.121.193:15555"
+    output_wave_file = 'tts_output.wav'
+    ap = AddressProvider()
+    address = ap.get("trybun")
     sampling_rate = 44100
     input_text = "Ala ma kota i chciałaby zaliczyć Technologię Mowy"
 
@@ -32,5 +34,5 @@ if __name__ == '__main__':
                 ws.setFrameRate(response.audio.sample_rate_hertz)
             ws.append(response.audio.content)
             if response.audio.end_of_stream:
-                    ws.save(wave_file)
+                    ws.save(output_wave_file)
     ws.clear()

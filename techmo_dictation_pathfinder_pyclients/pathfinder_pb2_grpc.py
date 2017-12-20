@@ -2,7 +2,7 @@
 import grpc
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
-from clients_engines import pathfinder_pb2 as pathfinder__pb2
+from techmo_dictation_pathfinder_pyclients import pathfinder_pb2 as pathfinder__pb2
 
 
 class PathfinderStub(object):

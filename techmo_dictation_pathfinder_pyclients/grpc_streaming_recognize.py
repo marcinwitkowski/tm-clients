@@ -1,7 +1,7 @@
 import time
 import threading
 from argparse import ArgumentParser
-import clients_engines.cloud_speech_extended_pb2 as cloud_speech_extended_pb2
+import techmo_dictation_pathfinder_pyclients.cloud_speech_extended_pb2 as cloud_speech_extended_pb2
 
 
 class RequestIterator:

@@ -4,9 +4,9 @@
 import argparse
 import wave
 import grpc
-import clients_engines.cloud_speech_extended_pb2_grpc as speech_grpc
-from clients_engines.grpc_streaming_recognize import StreamingRecognizer
-from clients_engines.grpc_sync_recognize import SyncRecognizer
+import techmo_dictation_pathfinder_pyclients.cloud_speech_extended_pb2_grpc as speech_grpc
+from techmo_dictation_pathfinder_pyclients.grpc_streaming_recognize import StreamingRecognizer
+from techmo_dictation_pathfinder_pyclients.grpc_sync_recognize import SyncRecognizer
 
 """
     Dictation Client script.
@@ -25,7 +25,7 @@ class DictationClient:
         channel = grpc.insecure_channel(address)
         self._dictation_service = speech_grpc.SpeechStub(channel)
 
-    def recognise(self, method, audio):
+    def recognize(self, method, audio):
         """
         Recognises speech in given audio.
         :param method: recognition method: sync or streaming

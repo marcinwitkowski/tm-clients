@@ -5,6 +5,7 @@ from techmo_sarmata_pyclient.utils.wave_loader import load_wave
 from techmo_sarmata_pyclient.service.sarmata_settings import SarmataSettings
 from techmo_sarmata_pyclient.service.sarmata_recognize import SarmataRecognizer
 from techmo_sarmata_pyclient.service.asr_service_pb2 import ResponseStatus
+from address_provider import AddressProvider
 import os
 
 
@@ -29,10 +30,10 @@ def print_results(responses):
 
 
 if __name__ == '__main__':
-
-    wave_file = "example_koncert.wav"
-    grammar_file = "g_koncert.abnf"
-    address = "149.156.121.122:16868"
+    ap = AddressProvider()
+    wave_file = "waves/example_cyfry.wav"
+    grammar_file = "grammars/cyfry.abnf"
+    address = ap.get("sarmata")
 
     audio = load_wave(wave_file)
 

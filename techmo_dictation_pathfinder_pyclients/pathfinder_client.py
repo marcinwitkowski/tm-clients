@@ -8,10 +8,10 @@ import time
 import wave
 
 import grpc
-import clients_engines.pathfinder_pb2 as pb
-import clients_engines.pathfinder_pb2_grpc as pf_grpc
+import techmo_dictation_pathfinder_pyclients.pathfinder_pb2 as pb
+import techmo_dictation_pathfinder_pyclients.pathfinder_pb2_grpc as pf_grpc
 
-from clients_engines.transcription_sanitizer import sanitize
+from techmo_dictation_pathfinder_pyclients.transcription_sanitizer import sanitize
 
 """
     Pathfinder Client script.
