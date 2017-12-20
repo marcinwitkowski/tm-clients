@@ -33,10 +33,9 @@ def print_results(responses):
 
 if __name__ == '__main__':
     parser = ArgumentParser(description="""Main script for running tests of Techmo Sarmata ASR system""")
-    parser.add_argument("--address", help="Techmo Sarmata ASR service", default="149.156.121.122:16868")
-    parser.add_argument("--wave", help="Wave path, should be mono, 8kHz or 16kHz", default="example.wav")
-    parser.add_argument("--grammar", help="SRGS grammar file (ABNF or XML format accepted)",
-                        default="cyfry.abnf")
+    parser.add_argument("--address", help="Techmo Sarmata ASR service")
+    parser.add_argument("--wave", help="Wave path, should be mono, 8kHz or 16kHz")
+    parser.add_argument("--grammar", help="SRGS grammar file (ABNF or XML format accepted)")
     # Timeouts, settings
     parser.add_argument("--nbest", help="Maximal number of hypotheses", default=3, type=int)
     parser.add_argument("--nomatch", help="Confidence acceptance threshold", default=0.2, type=float)
