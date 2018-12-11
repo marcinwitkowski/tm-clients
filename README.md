@@ -23,7 +23,7 @@ Project includes Python clients to services used in TM labs .
  This package provides API in Python to 4 systems:
  *   **Dictation** - Continuous speech recognition
  *   **Sarmata** - Speech recognition based on [SRGS](https://www.w3.org/TR/speech-grammar/) gramma
- *   **Trybun** - Text to speech synthesis
+ *   **Tribune** - Text to speech synthesis
 
 Addresses and ports to the systems are stored in the json defined in address_provider.py.
 
