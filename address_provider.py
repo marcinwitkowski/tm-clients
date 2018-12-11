@@ -11,7 +11,7 @@ __date__ = "11.12.2018"
 
 class AddressProvider:
 
-    def __init__(self, json_url="http://home.agh.edu.pl/~witkow/addresses.json"):
+    def __init__(self, json_url="http://149.156.121.122/~witkow/addresses.json"):
         self.addresses = dict()
         try:
             with request.urlopen(json_url) as url:
