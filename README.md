@@ -1,6 +1,6 @@
 # tm-clients
 
-Project includes Python clients to services used in TM labs . 
+Project includes Python clients to services provided by [Techmo](http://techmo.pl/) exclusively for TM labs. 
 
 ## Requirements:
  - VPN connection with AGH network (http://panel.agh.edu.pl/docs/openvpn/) when using outside the network.
@@ -20,11 +20,11 @@ Project includes Python clients to services used in TM labs .
 
  ## Clients
 
- This package provides API in Python to 4 systems:
+ This package provides API in Python to 3 systems:
  *   **Dictation** - Continuous speech recognition
  *   **Sarmata** - Speech recognition based on [SRGS](https://www.w3.org/TR/speech-grammar/) gramma
  *   **Tribune** - Text to speech synthesis
-
-Addresses and ports to the systems are stored in the json defined in address_provider.py.
+Original command line clients are provided with [Techmo GitHub](https://github.com/techmo-pl)
+Client scripts has been tested with Python 3.6. Addresses and ports to the systems are stored in the json defined in address_provider.py.
 
  Contact: witkow@agh.edu.pl
