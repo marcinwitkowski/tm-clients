@@ -22,7 +22,6 @@ Project includes Python clients to services used in TM labs .
 
  This package provides API in Python to 4 systems:
  *   **Dictation** - Continuous speech recognition
- *   **Pathfinder** - Key word spotting
  *   **Sarmata** - Speech recognition based on [SRGS](https://www.w3.org/TR/speech-grammar/) gramma
  *   **Trybun** - Text to speech synthesis
 

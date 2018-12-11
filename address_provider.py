@@ -6,7 +6,7 @@ import json
     Adress Provider provides addresses for Techmo services based on json stored in the web.
 """
 __author__ = "Marcin Witkowski"
-__date__ = "20.12.2016"
+__date__ = "11.12.2018"
 
 
 class AddressProvider:
@@ -32,6 +32,6 @@ class AddressProvider:
         """
         if system_key not in self.addresses:
             available_keys = list(self.addresses.keys())
-            raise Exception("No system with key {}. Available keys:{}".format(system_key, available_keys))
+            raise Exception("No system with key '{}'. Available keys:{}".format(system_key, available_keys))
         else:
             return self.addresses[system_key]
