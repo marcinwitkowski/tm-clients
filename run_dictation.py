@@ -30,7 +30,7 @@ class DictationArgs:
 
 if __name__ == '__main__':
 
-    args = DictationArgs("waves/example.wav")
+    args = DictationArgs("waves/example_cyfry.wav")
     args.mic = True
 
     if args.wave is not None or args.mic:
