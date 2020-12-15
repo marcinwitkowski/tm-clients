@@ -22,8 +22,7 @@ Project includes Python clients to services provided by [Techmo](http://techmo.p
 
  This package provides API in Python to 3 systems:
  *   **Dictation** - Continuous speech recognition
- *   **Sarmata** - Speech recognition based on [SRGS](https://www.w3.org/TR/speech-grammar/) gramma
- *   **Tribune** - Text to speech synthesis
+ *   **TTS** - Text to speech synthesis
  
 Original command line clients are provided with [Techmo GitHub](https://github.com/techmo-pl). 
 Addresses and ports to the systems are stored in the json defined in address_provider.py.
@@ -31,6 +30,6 @@ Addresses and ports to the systems are stored in the json defined in address_pro
 ## Final Remarks
 
 * Client scripts has been tested with Python 3.6. For safety reasons create [virtual environment](https://www.jetbrains.com/help/pycharm/creating-virtual-environment.html) for the project.
-* When using PyCharm remember to mark directories *sarmata*, *dictation* and *tribune* as "Sources Root".  
+* When using PyCharm remember to mark directories *dictation* and *tts* as "Sources Root".  
 
- Contact: witkow@agh.edu.pl
+ Contact: witkow at agh.edu.pl
