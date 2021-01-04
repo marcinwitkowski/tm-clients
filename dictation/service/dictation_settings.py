@@ -8,6 +8,9 @@ class DictationSettings:
     def session_id(self):
         return self.args.session_id
 
+    def grpc_timeout(self):
+        return self.args.grpc_timeout
+
     def max_alternatives(self):
         return self.args.max_alternatives
 
@@ -27,3 +30,6 @@ class DictationSettings:
             "speech-incomplete-timeout": str(self.args.speech_incomplete_timeout),
             "recognition-timeout": str(self.args.recognition_timeout),
         }
+
+    def context_phrase(self):
+        return self.args.context_phrase

@@ -1,3 +1,4 @@
+import os
 import threading
 from . import dictation_asr_pb2 as dictation_asr_pb2
 from . import dictation_asr_pb2_grpc as dictation_asr_pb2_grpc
@@ -30,6 +31,9 @@ class RequestIterator:
 
     def _normal_request(self):
         data = next(self.audio_generator)
+        if data == None:
+            raise StopIteration
+
         return dictation_asr_pb2.StreamingRecognizeRequest(audio_content=data)
 
     def __iter__(self):
@@ -41,9 +45,9 @@ class RequestIterator:
 
 
 class StreamingRecognizer:
-    def __init__(self, address, settings_args):
+    def __init__(self, address, ssl_directory, settings_args):
         # Use ArgumentParser to parse settings
-        self.service = dictation_asr_pb2_grpc.SpeechStub(grpc.insecure_channel(address))
+        self.service = dictation_asr_pb2_grpc.SpeechStub(StreamingRecognizer.create_channel(address, ssl_directory))
         self.settings = settings_args
 
     def recognize(self, audio):
@@ -53,11 +57,14 @@ class StreamingRecognizer:
     def recognize_audio_content(self, requests_iterator):
         time_offsets = self.settings.time_offsets()
 
+        timeout=None
+        if self.settings.grpc_timeout() > 0:
+            timeout = self.settings.grpc_timeout() / 1000 # milliseconds to seconds
         metadata = []
         if self.settings.session_id():
             metadata = [('session_id', self.settings.session_id())]
 
-        recognitions = self.service.StreamingRecognize(requests_iterator, metadata=metadata)
+        recognitions = self.service.StreamingRecognize(requests_iterator, timeout=timeout, metadata=metadata)
 
         confirmed_results = []
         alignment = []
@@ -66,6 +73,7 @@ class StreamingRecognizer:
         for recognition in recognitions:
             if recognition.error.code:
                 print(u"Received error response: ({}) {}".format(recognition.error.code, recognition.error.message))
+                requests_iterator.audio_stream.close()
 
             elif recognition.speech_event_type != dictation_asr_pb2.StreamingRecognizeResponse.SPEECH_EVENT_UNSPECIFIED:
                 print(u"Received speech event type: {}".format(
@@ -101,17 +109,41 @@ class StreamingRecognizer:
         }]  # array with one element
 
     @staticmethod
+    def create_channel(address, ssl_directory):
+        if not ssl_directory:
+            return grpc.insecure_channel(address)
+
+        def read_file(path):
+            with open(path, 'rb') as file:
+                return file.read()
+
+        return grpc.secure_channel(address, grpc.ssl_channel_credentials(
+            read_file(os.path.join(ssl_directory, 'ca.crt')),
+            read_file(os.path.join(ssl_directory, 'client.key')),
+            read_file(os.path.join(ssl_directory, 'client.crt')),
+        ))
+
+    @staticmethod
+    def build_recognition_config(sampling_rate, settings):
+        recognition_config = dictation_asr_pb2.RecognitionConfig(
+            encoding='LINEAR16',  # one of LINEAR16, FLAC, MULAW, AMR, AMR_WB
+            sample_rate_hertz=sampling_rate,  # the rate in hertz
+            # See https://g.co/cloud/speech/docs/languages for a list of supported languages.
+            language_code='pl-PL',  # a BCP-47 language tag
+            enable_word_time_offsets=settings.time_offsets(),  # if true, return recognized word time offsets
+            max_alternatives=1,  # maximum number of returned hypotheses
+        )
+        if (settings.context_phrase()):
+            speech_context = recognition_config.speech_contexts.add()
+            speech_context.phrases.append(settings.context_phrase())
+
+        return recognition_config
+
+    @staticmethod
     def build_configuration_request(sampling_rate, settings):
         config_req = dictation_asr_pb2.StreamingRecognizeRequest(
             streaming_config=dictation_asr_pb2.StreamingRecognitionConfig(
-                config=dictation_asr_pb2.RecognitionConfig(
-                    encoding='LINEAR16',  # one of LINEAR16, FLAC, MULAW, AMR, AMR_WB
-                    sample_rate_hertz=sampling_rate,  # the rate in hertz
-                    # See https://g.co/cloud/speech/docs/languages for a list of supported languages.
-                    language_code='pl-PL',  # a BCP-47 language tag
-                    enable_word_time_offsets=settings.time_offsets(),  # if true, return recognized word time offsets
-                    max_alternatives=1,  # maximum number of returned hypotheses
-                ),
+                config=StreamingRecognizer.build_recognition_config(sampling_rate, settings),
                 single_utterance=settings.single_utterance(),
                 interim_results=settings.interim_results()
             )

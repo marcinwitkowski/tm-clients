@@ -4,7 +4,7 @@ from utils.audio_source import AudioStream
 from utils.mic_source import MicrophoneStream
 from service.dictation_settings import DictationSettings
 from service.streaming_recognizer import StreamingRecognizer
-from DICTATION_CLIENT_VERSION import DICTATION_CLIENT_VERSION
+from VERSION import DICTATION_CLIENT_VERSION
 
 
 def print_results(results):
@@ -41,12 +41,17 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("--service-address", dest="address", required=True,
                         help="IP address and port (address:port) of a service the client will connect to.", type=str)
+    parser.add_argument("--ssl-dir", dest="ssl_directory", default="",
+                        help="If set to a path with ssl credential files (client.crt, client.key, ca.crt), use ssl authentication. Otherwise use insecure channel (default).", type=str)
     parser.add_argument("--wave-path", dest="wave",
                         help="Path to wave file with speech to be recognized. Should be mono, 8kHz or 16kHz.")
     parser.add_argument("--mic", help="Use microphone as an audio source (instead of wave file).", action='store_true')
     parser.add_argument("--session-id",
                         help="Session ID to be passed to the service. If not specified, the service will generate a default session ID itself.",
                         default="", type=str)
+    parser.add_argument("--grpc-timeout",
+                        help="Timeout in milliseconds used to set gRPC deadline - how long the client is willing to wait for a reply from the server. If not specified, the service will set the deadline to a very large number.",
+                        default=0, type=int)
     # request configuration section
     parser.add_argument("--max-alternatives", help="Maximum number of recognition hypotheses to be returned.",
                         default=1, type=int)
@@ -63,6 +68,7 @@ if __name__ == '__main__':
     parser.add_argument("--speech-incomplete-timeout", help="MRCP v2 speech incomplete timeout [ms].", default=4000,
                         type=int)
     parser.add_argument("--recognition-timeout", help="MRCP v2 recognition timeout [ms].", default=10000, type=int)
+    parser.add_argument("--context-phrase", help="Specifies which context model to use.", default="", type=str)
 
     # Stream audio to the ASR engine and print all hypotheses to standard output
     args = parser.parse_args()
@@ -70,7 +76,7 @@ if __name__ == '__main__':
     if args.wave is not None or args.mic:
         with create_audio_stream(args) as stream:
             settings = DictationSettings(args)
-            recognizer = StreamingRecognizer(args.address, settings)
+            recognizer = StreamingRecognizer(args.address, args.ssl_directory, settings)
 
             print('Recognizing...')
             results = recognizer.recognize(stream)

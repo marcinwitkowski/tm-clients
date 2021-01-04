@@ -6,7 +6,7 @@ import json
     Adress Provider provides addresses for Techmo services based on json stored in the web.
 """
 __author__ = "Marcin Witkowski"
-__date__ = "26.11.2019"
+__date__ = "31.12.2020"
 
 
 class AddressProvider:
