@@ -1,0 +1,238 @@
+// Techmo TTS API
+// version: 2.1.0
+// authors: Dawid Skurzok, Paweł Jaciów, Michał Radziszewski
+// date:    2021-04-21
+syntax = "proto3";
+
+package techmo.tts.grpc_api;
+
+// Service that implements Techmo Text-To-Speech (TTS) API.
+service TTS
+{
+    // Lists all available voices which can be used to synthesize speech.
+    rpc ListVoices(ListVoicesRequest) returns (ListVoicesResponse);
+
+    // Synthesizes the speech (audio signal) based on the requested phrase and the optional configuration.
+    // Returns audio signal with synthesized speech (streaming version, one or more response packets).
+    rpc SynthesizeStreaming(SynthesizeRequest) returns (stream SynthesizeResponse);
+
+    // Synthesizes the speech (audio signal) based on the requested phrase and the optional configuration.
+    // Returns audio signal with synthesized speech (non-streaming version, always one repsonse packet).
+    rpc Synthesize(SynthesizeRequest) returns (SynthesizeResponse);
+
+    // Adds a new lexicon with the requested name or overwrites the existing one if there is already a lexicon with such name.
+    rpc PutLexicon(PutLexiconRequest) returns (PutLexiconResponse);
+
+    // Removes the lexicon with the requested name.
+    rpc DeleteLexicon(DeleteLexiconRequest) returns (DeleteLexiconResponse);
+
+    // Sends back the content of the lexicon with the requested name.
+    // Returns the lexicon content.
+    rpc GetLexicon(GetLexiconRequest) returns (GetLexiconResponse);
+
+    // Lists all client-defined lexicons which can be referred by `<lexicon>` tag in synthesize requests.
+    // Returns the list of names of lexicons.
+    rpc ListLexicons(ListLexiconsRequest) returns (ListLexiconsResponse);
+}
+
+// The top-level message sent by the client to request listing of available voices.
+message ListVoicesRequest
+{
+    // ISO 639-1 language code. Optional. When defined, limits the listed voices to the voices supprting the requested language.
+    string language = 1;
+}
+
+// The listing of available voices returned by a `ListVoices` call.
+message ListVoicesResponse
+{
+    // The list of all available voices or voices supproting the requested laguage.
+    repeated VoiceInfo voices = 1;
+}
+
+// The top-level message sent by the client for `Synthesize` and `SynthesizeStreaming` methods.
+// It contains a text to be synthesized and a configuration.
+// The phrase to synthesize is put as a string in `text` field. The string has to be in orthographic form.
+// The string can be either a plain text or SSML (https://w3.org/TR/speech-synthesis11/).
+// Currently the following SSML tags are supported:
+// `<speak>` - root xml node, with optional `xml:lang` attribute,
+// `<prosody>` - supported attributes: `pitch`, `range`, `rate`, and `volume`,
+// `<break>` - supported attributes: `strength` and `time`,
+// `<emphasis>` - supported attribute: `level`,
+// `<say-as>` - supported attribute: `interpret-as` (consult Techmo TTS documentation for the complete list of all available implementations),
+// `<lang>` - supported attribute: `xml:lang`,
+// `<voice>` - supported attributes: `name`, `gender`, and `age`.
+// `SynthesizeConfig`'s fields can be set to specify parameters of synthesis (sampling rate, language, and voice) and a format of the output (PCM16 or Ogg/Vorbis compression).
+message SynthesizeRequest
+{
+    // Text to be synthesized.
+    string text = 1;
+
+    // Configuration.
+    SynthesizeConfig config = 2;
+}
+
+// Provides information to the synthesizer that specifies how to process the request.
+message SynthesizeConfig
+{
+    // ISO 639-1 code of the language of text to be synthesized (may be overriden by SSML tags in request text).
+    string language = 1;
+
+    // Optional. Overrides the default synthesized speech parameters
+    AudioConfig audio_config = 2;
+
+    // Requested voice to be used to synthesize the text (may be overriden by SSML tags in request text).
+    // If there is no voice satisfying all the required criteria,
+    // the voice is selected according to name (if defined) first, gender (if defined) second,
+    // and age (if defined) third.
+    Voice voice = 3;
+}
+
+// Desfines the parameters of synthesized speech.
+message AudioConfig
+{
+    // Requested format of the output audio stream.
+    AudioEncoding audio_encoding = 1;
+
+    // Desired sampling frequency in hertz of synthesized audio. The value 0 means use the default Synthesizer sampling rate.
+    int32 sample_rate_hertz = 2;
+
+    // The average speech pitch scaling factor. The value 1.0 is a neutral value.
+    float pitch = 3;
+
+    // The speech range scaling factor. The value 1.0 is a neutral value.
+    float range = 4;
+
+    // The speech rate (speed) scaling factor. The value 1.0 is a neutral value.
+    float rate = 5;
+
+    // The speech volume scaling factor. The value 1.0 is a neutral value.
+    float volume = 6;
+}
+
+// Voice definition used to describe requested voice in SynthesizeConfig,
+// and voice parameters in ListVoices (as a part of VoiceInfo).
+message Voice
+{
+    // The name of the voice.
+    string name = 1;
+
+    // Gender of the voice.
+    Gender gender = 2;
+
+    // Age of the voice.
+    Age age = 3;
+}
+
+// Information about a voice, returned by ListVoices call.
+// Both the supported_languages and voice are always defined, i.e. non-empy.
+message VoiceInfo
+{
+    // The list of ISO 639-1 codes of laguages supported by the voice.
+    repeated string supported_languages = 1;
+
+    // The voice parameters.
+    Voice voice = 2;
+}
+
+// The requested format of the response audio data.
+enum AudioEncoding
+{
+    PCM16 = 0;       // Uncompressed 16-bit signed integer samples, without any header.
+    OGG_VORBIS = 1;  // Ogg/Vorbis endoded data stream.
+}
+
+// Gender of the voice.
+enum Gender
+{
+    GENDER_UNSPECIFIED = 0;
+    FEMALE = 1;
+    MALE = 2;
+}
+
+// Age of the voice.
+enum Age
+{
+    AGE_UNSPECIFIED = 0;
+    ADULT = 1;
+    CHILD = 2;
+    SENILE = 3;
+}
+
+// `SynthesizeResponse` is the only message returned to the client by `SynthesizeStreaming` and `Synthesize`.
+// During `SynthesizeStreaming`, a series of one or more `SynthesizeResponse` messages are streamed back to the client.
+// During `Synthesize` always one message is generated.
+message SynthesizeResponse
+{
+    // Audio data corresponding to a portion of the text
+    // that is currently being processed.
+    AudioData audio = 1;
+}
+
+// Audio data corresponding to a portion of the text
+// that is currently being processed.
+message AudioData
+{
+    // Sampling frequency in hertz.
+    int32 sample_rate_hertz = 1;
+
+    // Audio data bytes encoded by default as Linear PCM (uncompressed 16-bit signed little-endian samples).
+    // Using `output_format` in request it can be changed to Ogg/Vorbis encoded stream.
+    bytes content = 2;
+}
+
+// The top-level message sent by the client to put the new pronounciation lexicon.
+message PutLexiconRequest
+{
+    // Name of the lexicon, used as `uri` attributes of `<lexicon>` tags in synthesize requests.
+    string name = 1;
+
+    // Content of the lexicon, shall comply to https://www.w3.org/TR/pronunciation-lexicon/.
+    string content = 2;
+}
+
+// Status of the PutLexicon call.
+message PutLexiconResponse
+{
+    // Empty, just verify returned GRPC status.
+}
+
+// The top-level message sent by the client to delete the requested pronounciation lexicon.
+message DeleteLexiconRequest
+{
+    // Name of the lexicon to delete.
+    string name = 1;
+}
+
+// Status of the DeleteLexicon call.
+message DeleteLexiconResponse
+{
+    // Empty, just verify returned GRPC status.
+}
+
+// The top-level message sent by the client to get the content the requested pronounciation lexicon.
+message GetLexiconRequest
+{
+    // Name of the lexicon to list its content.
+    string name = 1;
+}
+
+// Result of the GetLexicon call.
+message GetLexiconResponse
+{
+    // If successful, contains the content of the lexicon, in SSML/XML format.
+    string content = 1;
+}
+
+// The top-level message sent by the client to obtain the list of all available lexicons.
+message ListLexiconsRequest
+{
+    // ISO 639-1 language code. Optional. When defined, limits the listed lexicons to the lexicons supprting the requested language.
+    string language = 1;
+}
+
+// Result of the ListLexicons call.
+message ListLexiconsResponse
+{
+    // The list of names of all available lexicons.
+    repeated string names = 1;
+}
