@@ -3,7 +3,6 @@
 Project includes Python clients to services provided by [Techmo](http://techmo.pl/) exclusively for TM labs. 
 
 ## Requirements:
- - VPN connection with AGH network (http://panel.agh.edu.pl/docs/openvpn/) when using outside the network.
  - Installed packages listed in requirements.txt. To install requirements run:
  
  Linux:
@@ -11,12 +10,13 @@ Project includes Python clients to services provided by [Techmo](http://techmo.p
  pip install -r requirements.txt
  ```
  
- Windows:
+ Windows (with virtualenv):
  1. Move to the directory with the used interpreter python.exe.
  2. Run:
  ```bash
  python.exe -m pip install -r path_to_requirements.txt
  ```
+ or use Linux command in Anaconda Shell.
 
  ## Clients
 
@@ -29,7 +29,7 @@ Addresses and ports to the systems are stored in the json defined in address_pro
 
 ## Final Remarks
 
-* Client scripts has been tested with Python 3.6. For safety reasons create [virtual environment](https://www.jetbrains.com/help/pycharm/creating-virtual-environment.html) for the project.
+* Client scripts has been tested with Python 3.9. For safety reasons create [virtual environment](https://www.jetbrains.com/help/pycharm/creating-virtual-environment.html) for the project.
 * When using PyCharm remember to mark directories *dictation* and *tts* as "Sources Root".  
 
  Contact: witkow at agh.edu.pl
