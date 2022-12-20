@@ -1,4 +1,5 @@
-# Python implementation of Techmo TTS gRPC client.
+# Python implementation of Dictation ASR gRPC client.
+
 
 
 ## How to prepare virtual environment and run Dictation Client on Windows 10
@@ -25,16 +26,16 @@ then confirm your choice.
 Navigate into the project root directory, eg.:
 
 ```
-cd C:\Users\Jan_Kowalski\Desktop\techmo-tts-client-python\
+cd C:\Users\Jan_Kowalski\Desktop\techmo-dictation-client-python\
 ```
 
-Create virtual environment for project:
+Create virtual environment for project:and install required packages:
 
 ```
 python -m venv .venv
 ```
 
-Activate newly created virtual environment:
+Activane newly created virtual environment:
 ```
 .\.venv\Scripts\activate
 ```
@@ -53,24 +54,25 @@ Set-ExecutionPolicy Restricted
 
 
 
-
 ## Usage
 
 Basic request:
 
 ```
-python tts_client.py --service-address ADDRESS --text TEXT
+python dictation_client.py --service-address ADDRESS --audio-path AUDIO_FILE_NAME
 ```
 
 
 For example:
 
 ```
-python tts_client.py --service-address "demo.devtechmo.pl:25515" --text "Polski tekst do syntezy"
+python dictation_client.py --service-address "demo.devtechmo.pl:25510" --audio-path test.wav
 ```
+Each request must be provided with the address of the service and the audio source (wav/ogg/mp3 file or microphone).
+
 
 
 To get list of all available options, use:
 ```
-python tts_client.py --help
+python dictation_client.py --help
 ```

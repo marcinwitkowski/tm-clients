@@ -1,5 +1,6 @@
-grpcio==1.38.1
-grpcio-tools==1.38.1
+setuptools==50.3.2
+grpcio==1.43.0
+grpcio-tools==1.43.0
 protobuf==3.18.1
-numpy==1.19.5
+numpy==1.24.0
 sounddevice==0.4.1
