@@ -1,5 +1,5 @@
 setuptools==65.5.1
-grpcio==1.43.0
+grpcio==1.53.0
 grpcio-tools==1.43.0
 grpcio-health-checking==1.43.0
 google-api-core==1.27.0
