@@ -3,7 +3,7 @@ grpcio==1.53.0
 grpcio-tools==1.43.0
 grpcio-health-checking==1.43.0
 google-api-core==1.27.0
-protobuf==3.18.1
+protobuf==3.18.3
 gapic-google-cloud-speech-v1==0.15.3
 grpc-google-cloud-speech-v1==0.8.1
 proto-google-cloud-speech-v1==0.15.3
