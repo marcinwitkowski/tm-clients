@@ -3,8 +3,13 @@
 Project includes Python clients to services provided by [Techmo](http://techmo.pl/) exclusively for TM labs. 
 
 ## Setup
- Install packages listed in requirements.txt to run both `run_tts.py` and `run_dictation.py`.  
- ### Linux:
+* It is recommended to create [virtual environment](https://www.jetbrains.com/help/pycharm/creating-virtual-environment.html) for the project.
+* Install packages listed in requirements.txt to run both `run_tts.py` and `run_dictation.py`.  
+* Install `gcc` (at Linux) or `Microsoft Build Tools` (at Windows) if prompted during installation of GRPC packages.
+* Client scripts have been tested using Python 3.10 within PyCharm at Windows and virtualenv at Linux at 2024-03-01.
+ 
+ 
+### Linux:
  ```bash
  pip install -r requirements.txt
  ```
@@ -16,11 +21,11 @@ Project includes Python clients to services provided by [Techmo](http://techmo.p
  python.exe -m pip install -r path_to_requirements.txt
  ```
  or use Linux command in Anaconda Shell
- or use the Terminal in Pycharm to install as in Linux using the virtualenvironment created in this IDE.
-### Final Remarks
 
-* Client scripts has been tested with Python 3.10 using PyCharm on Windows. It is recommended to create [virtual environment](https://www.jetbrains.com/help/pycharm/creating-virtual-environment.html) for the project.
-* When using PyCharm remember to mark directories *dictation* and *tts* as "Sources Root".  
+ or use the Terminal in Pycharm to install as in Linux using the virtual environment created in this IDE.
+
+
+
 
  ## Clients
 

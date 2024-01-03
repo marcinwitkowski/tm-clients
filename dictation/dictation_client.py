@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 import sys
 from argparse import ArgumentParser
-from utils.service_utils import ServiceUtils
-from utils.audio_stream import AudioStream
-from utils.audio_loader import AudioLoader
-from utils.mic_stream import MicrophoneStream
-from service.dictation_settings import DictationSettings
-from service.streaming_recognizer import StreamingRecognizer
-from service.sync_recognizer import SyncRecognizer
-from dictation.VERSION import __version__
+from .utils.service_utils import ServiceUtils
+from .utils.audio_stream import AudioStream
+from .utils.audio_loader import AudioLoader
+from .utils.mic_stream import MicrophoneStream
+from .service.dictation_settings import DictationSettings
+from .service.streaming_recognizer import StreamingRecognizer
+from .service.sync_recognizer import SyncRecognizer
+from .VERSION import __version__
 
 
 def print_results(results):

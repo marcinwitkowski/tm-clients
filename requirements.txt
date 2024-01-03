@@ -2,7 +2,7 @@ grpcio
 grpcio-tools
 google-api-core==2.0.0
 grpcio-health-checking
-protobuf==3.20
+protobuf==3.20.2
 numpy
 sounddevice
 pydub
